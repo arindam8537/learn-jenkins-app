@@ -77,11 +77,13 @@ pipeline {
 
 
             }
+
+        }
                 stage('Deploy') {
-                agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+                   agent {
+                      docker {
+                        image 'node:18-alpine'
+                        reuseNode true
                 }
             }
             steps {
@@ -92,7 +94,6 @@ pipeline {
 
                 '''
             }
-        }
         }
 
 
