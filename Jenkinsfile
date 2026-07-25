@@ -83,16 +83,13 @@ pipeline {
                 stage('Deploy') {
                    agent {
                       docker {
-                        image 'node:18-alpine'
+                        //image 'node:18-alpine'
+                        image 'node:18'
                         reuseNode true
                 }
             }
             steps {
                 sh '''
-                    which bash
-                    which sh
-                    node -v
-                    npm -v
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "Deploying to production... ${NETLIFY_SITE_ID}"
