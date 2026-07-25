@@ -84,6 +84,9 @@ pipeline {
                    agent {
                       docker {
                         //image 'node:18-alpine'
+                        // this is fix due to netlify  Error message
+                        // Command failed with ENOENT: npm run build
+                        //  spawn bash ENOENT
                         image 'node:18'
                         reuseNode true
                 }
@@ -94,7 +97,7 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to production... ${NETLIFY_SITE_ID}"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
+                    node_modules/.bin/netlify deploy --dir=build --prod ##--no-build
 
                 '''
             }
