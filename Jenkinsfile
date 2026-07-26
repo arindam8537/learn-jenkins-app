@@ -61,6 +61,10 @@ pipeline {
                     reuseNode true
                 }
             }
+            // added environment variable to avoid conflict with the default playwright-report directory for local and Prod E2E
+            environment {
+                 PLAYWRIGHT_HTML_OUTPUT_DIR = 'playwright-report-local'
+    }
 
             steps {
                 sh '''
@@ -113,6 +117,8 @@ pipeline {
 
             environment {
                 CI_ENVIRONMENT_URL = 'https://playful-griffin-ec6f90.netlify.app'
+                // added this environment variable to avoid conflict with the default playwright-report directory for local and Prod E2E
+                PLAYWRIGHT_HTML_OUTPUT_DIR = 'playwright-report-prod'
             }
 
             steps {
