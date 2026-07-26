@@ -62,9 +62,9 @@ pipeline {
                 }
             }
             // added environment variable to avoid conflict with the default playwright-report directory for local and Prod E2E
-            environment {
+        /*    environment {
                  PLAYWRIGHT_HTML_OUTPUT_DIR = 'playwright-report-local'
-    }
+    } */
 
             steps {
                 sh '''
@@ -76,7 +76,7 @@ pipeline {
             }
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report-local', reportFiles: 'index.html', reportName: 'Playwright local', reportTitles: '', useWrapperFileDirectly: true])
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright local', reportTitles: '', useWrapperFileDirectly: true])
                     }
                   }
         }
@@ -85,7 +85,30 @@ pipeline {
             }
 
         }
-                stage('Deploy') {
+
+   /*                     stage('Deploy Stage') {
+                   agent {
+                      docker {
+                        //image 'node:18-alpine'
+                        // this is fix due to netlify  Error message
+                        // Command failed with ENOENT: npm run build
+                        //  spawn bash ENOENT
+                        image 'node:18'
+                        reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to Staging... ${NETLIFY_SITE_ID}"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build   ### if we don't give --prod then it will create temp env for staging
+
+                '''
+            } */
+        }
+                stage('Deploy Prod') {
                    agent {
                       docker {
                         //image 'node:18-alpine'
@@ -118,7 +141,7 @@ pipeline {
             environment {
                 CI_ENVIRONMENT_URL = 'https://playful-griffin-ec6f90.netlify.app'
                 // added this environment variable to avoid conflict with the default playwright-report directory for local and Prod E2E
-                PLAYWRIGHT_HTML_OUTPUT_DIR = 'playwright-report-prod'
+               // PLAYWRIGHT_HTML_OUTPUT_DIR = 'playwright-report-prod'
             }
 
             steps {
@@ -128,7 +151,7 @@ pipeline {
             }
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report-prod', reportFiles: 'index.html', reportName: 'Playwright E2E ', reportTitles: '', useWrapperFileDirectly: true])
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E', reportTitles: '', useWrapperFileDirectly: true])
                     }
                   }
         }
