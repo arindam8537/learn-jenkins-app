@@ -86,7 +86,7 @@ pipeline {
 
         }
 
-   /*                     stage('Deploy Stage') {
+         /*             stage('Deploy Stage') {
                    agent {
                       docker {
                         //image 'node:18-alpine'
@@ -106,8 +106,8 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build   ### if we don't give --prod then it will create temp env for staging
 
                 '''
-            } */
-        }
+            } 
+        } */
                 stage('Deploy Prod') {
                    agent {
                       docker {
