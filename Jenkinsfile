@@ -108,7 +108,16 @@ pipeline {
                 '''
             } 
         } 
-                stage('Deploy Prod') {
+    // adding this for apporval process before deploying to production. 
+            stage('Approval') {
+                steps {
+                    timeout(time: 1, unit: 'MINUTES') {
+                    input message: 'Kindly approve for deployment ...', ok: 'Yes, approving the deployment'
+                    }
+                    
+                }
+            }
+                    stage('Deploy Prod') {
                    agent {
                       docker {
                         //image 'node:18-alpine'
