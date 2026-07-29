@@ -5,9 +5,26 @@ pipeline {
         NETLIFY_SITE_ID = '2c9772bc-e571-401c-8b54-adb675cd79b0'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
        // CI_ENVIRONMENT_URL = 'https://playful-griffin-ec6f90.netlify.app/'  -- called on Prod instead of locally
+       REACT_APP_VERSION = "1.0.${BUILD_ID}"  // for versioning along with BUILD_ID of jenkins  
     }
 
     stages {
+
+        stage('AWS CLI') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    --args '--entrypoint=""'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    aws --version
+                    aws configure list
+                '''
+            }
+        }
         
 
         stage('Build') {
