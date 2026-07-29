@@ -10,25 +10,30 @@ pipeline {
 
     stages {
 
-        stage('AWS CLI') {
+        stage('AWS S3 Sync') {
             agent {
                 docker {
                     image 'amazon/aws-cli'
                     args '--entrypoint=""'
                     reuseNode true
                 }
+
+            environment {
+                AWS_S3_BUCKET= 'learn-jenkins-29072026'
             }
+
             steps {
 
                 withCredentials([usernamePassword(credentialsId: 'aws-token-s3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                 sh '''
                     aws --version
-                    aws configure list
-                    aws s3 ls  
-                    echo "Hello S3 from Jenkins" > index.html
-                    aws s3 cp index.html s3://learn-jenkins-29072026/index.html
+                    ## aws configure list
+                    ## aws s3 ls  
+                    ## echo "Hello S3 from Jenkins" > index.html
+                    ## aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                    aws s3 sync build s3://$AWS_S3_BUCKET/ --delete   ## delete will discard old files from s3 bucket which are not present in build folder.
                 '''
-}
+                }
             }
         }
         
@@ -51,7 +56,33 @@ pipeline {
                 '''
             }
         }
-        
+
+        stage('AWS S3 Sync') {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                    args '--entrypoint=""'
+                    reuseNode true
+                }
+
+            environment {
+                AWS_S3_BUCKET= 'learn-jenkins-29072026'
+            }
+
+            steps {
+
+                withCredentials([usernamePassword(credentialsId: 'aws-token-s3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                sh '''
+                    aws --version
+                    ## aws configure list
+                    ## aws s3 ls  
+                    ## echo "Hello S3 from Jenkins" > index.html
+                    ## aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                    aws s3 sync build s3://$AWS_S3_BUCKET/ --delete   ## delete will discard old files from s3 bucket which are not present in build folder.
+                '''
+                }
+            }
+        }
 
         stage('Test'){
             parallel {
