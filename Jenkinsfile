@@ -28,27 +28,7 @@ pipeline {
                     echo "Hello S3 from Jenkins" > index.html
                     aws s3 cp index.html s3://learn-jenkins-29072026/index.html
                 '''
-                    }
-            }
-        }
-        
-
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    ls -la
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -la
-                '''
+}
             }
         }
         
