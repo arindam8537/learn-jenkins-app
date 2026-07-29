@@ -28,7 +28,7 @@ pipeline {
                     echo "Hello S3 from Jenkins" > index.html
                     aws s3 cp index.html s3://learn-jenkins-29072026/index.html
                 '''
-}
+                    }
             }
         }
         
