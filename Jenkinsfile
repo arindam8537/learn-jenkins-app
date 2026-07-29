@@ -111,7 +111,7 @@ pipeline {
     // adding this for apporval process before deploying to production. 
             stage('Approval') {
                 steps {
-                    timeout(time: 1, unit: 'MINUTES') {
+                    timeout(time: 15, unit: 'MINUTES') {
                     input message: 'Kindly approve for deployment ...', ok: 'Yes, approving the deployment'
                     }
                     
