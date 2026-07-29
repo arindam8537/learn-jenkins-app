@@ -9,8 +9,28 @@ pipeline {
     }
 
     stages {
+        
 
-        stage('AWS CLI') {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
+
+                stage('AWS CLI') {
             agent {
                 docker {
                     image 'amazon/aws-cli'
@@ -28,9 +48,9 @@ pipeline {
                     aws --version
                     ## aws configure list
                     ## aws s3 ls  
-                    echo "Hello S3 from Jenkins" > index.html
-                    aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
-                    ##aws sync build s3://$AWS_S3_BUCKET  ## --delete this will delete the files from S3 which are not present in build folder. this is good pratice to discard old unused files.
+                    ## echo "Hello S3 from Jenkins" > index.html
+                    ## aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                    aws sync build s3://$AWS_S3_BUCKET  ## --delete this will delete the files from S3 which are not present in build folder. this is good pratice to discard old unused files.
                 '''
 }
             }
