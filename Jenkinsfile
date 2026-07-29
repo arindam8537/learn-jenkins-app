@@ -126,14 +126,14 @@ pipeline {
             } 
         } 
     // adding this for apporval process before deploying to production. 
-            stage('Approval') {
+         /*   stage('Approval') {
                 steps {
                     timeout(time: 15, unit: 'MINUTES') {
                     input message: 'Kindly approve for deployment ...', ok: 'Yes, approving the deployment'
                     }
                     
                 }
-            }
+            } */ //commenting this stage for now as no need to approve for now. ( 129-136 )
                     stage('Deploy Prod') {
                    agent {
                       docker {
