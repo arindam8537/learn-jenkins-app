@@ -5,7 +5,7 @@ pipeline {
         NETLIFY_SITE_ID = '2c9772bc-e571-401c-8b54-adb675cd79b0'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
        // CI_ENVIRONMENT_URL = 'https://playful-griffin-ec6f90.netlify.app/'  -- called on Prod instead of locally
-       REACT_APP_VERSION = "1.0.${BUILD_ID}"  // for versioning along with BUILD_ID of jenkins  
+        REACT_APP_VERSION = "1.0.${BUILD_ID}"  // for versioning along with BUILD_ID of jenkins  
     }
 
     stages {
@@ -19,10 +19,16 @@ pipeline {
                 }
             }
             steps {
+
+                withCredentials([usernamePassword(credentialsId: 'aws-token-s3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                 sh '''
                     aws --version
                     aws configure list
+                    aws s3 ls  
+                    echo "Hello S3 from Jenkins" > index.html
+                    aws s3 cp index.html s3://learn-jenkins-29072026/index.html
                 '''
+}
             }
         }
         
